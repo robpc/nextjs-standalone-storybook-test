@@ -38,3 +38,17 @@ Retest the standalone build
 
 Since storybook adds no dependencies used in `app/`, the expectation is that 
 this number would be the same as the previous build.
+
+Setting `outputFileTracingExcludes` is a workaround
+
+        const nextConfig = {
+            output: 'standalone',
+            experimental: {
+                /**
+                * Explicitly exclude `@swc/core*` folder from standalone output in `.next/standalone`.
+                */
+                outputFileTracingExcludes: {
+                    "**/*": ["./node_modules/@swc/core*"]
+                }
+            }
+        }
