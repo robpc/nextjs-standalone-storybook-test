@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# nextjs-standalone-storybook-test
 
-## Getting Started
+This is a test of the standalone export from NextJS when using storybook.
 
-First, run the development server:
+## Steps to recreate this project
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Create the project
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+        npx create-next-app@latest nextjs-standalone-storybook-test
+        cd nextjs-standalone-storybook-test/
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Edit the `next.config.js`
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+        /** @type {import('next').NextConfig} */
+        const nextConfig = {
+            output: 'standalone'
+        }
 
-## Learn More
+        module.exports = nextConfig
 
-To learn more about Next.js, take a look at the following resources:
+Test the standalone build
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+        $ npm run build
+        # ...
+        $ du -sh .next/standalone/node_modules/
+        23M     .next/standalone/node_modules/
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Add storybook
 
-## Deploy on Vercel
+        npx storybook@latest init
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Retest the standalone build
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+        $ npm run build
+        # ...
+        $ du -sh .next/standalone/node_modules/
+        145M    .next/standalone/node_modules/
+
+Since storybook adds no dependencies used in `app/`, the expectation is that 
+this number would be the same as the previous build.
